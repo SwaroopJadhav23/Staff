@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Psychometric</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #064E3B;
+            padding: 10px;
+            color: white;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        .navbar a:hover {
+            background-color: #065F43;
+        }
+        .navbar input {
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .navbar button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #65A30D;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .navbar button:hover {
+            background-color: #4F8A10;
+        }
+        .status-message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #064E3B;
+        }
+        .sheet-container {
+            margin-top: 60px; /* Added margin to account for navbar height */
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .sheet-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="staff.html">Staff Portal</a>
+        <div>
+            <input type="text" id="sheetLinkInput" placeholder="Enter new Google Sheet link" />
+            <button id="changeSheetButton">Change</button>
+        </div>
+    </div>
+
+    <div class="status-message" id="statusMessage"></div>
+
+    <!-- Embedded Google Sheet -->
+    <div class="sheet-container">
+        <iframe id="sheetIframe" src="https://docs.google.com/spreadsheets/d/1fj0gfK7dd4ik0enkxZrNOLsmcd3HNA4ghZBbgYeLm8o/edit?usp=sharing" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusMessage = document.getElementById('statusMessage');
+            const studentName = localStorage.getItem('studentName');
+            const changeSheetButton = document.getElementById('changeSheetButton');
+            const sheetLinkInput = document.getElementById('sheetLinkInput');
+            const sheetIframe = document.getElementById('sheetIframe');
+
+            if (studentName) {
+                statusMessage.textContent = `${studentName} has filled out the Google Form.`;
+                statusMessage.style.color = 'green';
+            } else {
+                statusMessage.textContent = 'No students have filled out the Google Form yet.';
+                statusMessage.style.color = 'red';
+            }
+
+            changeSheetButton.addEventListener('click', () => {
+                const newLink = sheetLinkInput.value.trim();
+                if (newLink) {
+                    sheetIframe.src = newLink;
+                    statusMessage.textContent = 'Google Sheet link updated successfully!';
+                    statusMessage.style.color = 'green';
+                } else {
+                    statusMessage.textContent = 'Please enter a valid Google Sheet link.';
+                    statusMessage.style.color = 'red';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

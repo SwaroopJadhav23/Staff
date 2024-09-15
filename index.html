@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Portal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #064E3B;
+            padding: 10px;
+            color: white;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        .navbar a:hover {
+            background-color: #065F43;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #064E3B;
+        }
+        input[type="file"], input[type="text"] {
+            display: block;
+            width: calc(100% - 150px);
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #uploadFormLinkButton {
+            width: 150px;
+            padding: 14px;
+            margin-left: 10px;
+            font-size: 18px;
+            border: none;
+            border-radius: 6px;
+            background-color: #064E3B;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        #uploadFormLinkButton:hover {
+            background-color: #0056b3;
+        }
+        #shareButton, #clearStudentButton {
+            width: 100%;
+            padding: 12px;
+            margin-top: 22px;
+            font-size: 18px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+        }
+        #shareButton:hover, #clearStudentButton:hover {
+            background-color: #064E3B;
+        }
+        #shareButton {
+            background-color: #064E3B;
+        }
+        #clearStudentButton {
+            background-color: #064E3B;
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        table th {
+            background-color: #064E3B;
+            color: white;
+            font-weight: bold;
+        }
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        #loadingMessage {
+            display: none;
+            background-color: #FFA500;
+        }
+        .hidden {
+            display: none;
+        }
+        .success-message {
+            color: #28A745;
+            font-size: 16px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .error-message {
+            color: #DC3545;
+            font-size: 16px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .marksheet {
+            margin-bottom: 20px;
+        }
+        .marksheet table {
+            margin-bottom: 10px;
+        }
+        .marksheet button {
+            padding: 8px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .marksheet button.share {
+            background-color: #65A30D;
+        }
+        .marksheet button.delete {
+            background-color: #DC3545;
+        }
+        .marksheet button.clear-student {
+            background-color: #DC3545;
+        }
+
+        /* Alert Modal Styles */
+        #alertModal {
+            display: none;
+            position: fixed;
+            top: 20px; /* Position at the top */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        .alert-success {
+            color: #28A745;
+            border-color: #28A745;
+        }
+        .alert-error {
+            color: #DC3545;
+            border-color: #DC3545;
+        }
+        #alertCloseButton {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="staff.html">Staff Portal</a>
+        <a href="staff_psychometric.html">Psychometric</a>
+    </div>
+
+    <div class="container">
+        <h1>Upload Marksheets</h1>
+        <input type="file" id="fileInput" accept=".xlsx, .xls">
+        
+        <!-- Google Form Link Input -->
+        <h1>Set Google Form Link</h1>
+        <div class="input-container">
+            <input type="text" id="googleFormLink" placeholder="Enter Google Form URL">
+            <button id="uploadFormLinkButton">Upload Link</button>
+        </div>
+
+        <div id="loadingMessage">Uploading, please wait...</div>
+        <div id="message" class="hidden"></div>
+        <div id="marksheetsContainer"></div>
+        <button id="clearStudentButton">Clear Student</button>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alertModal">
+        <button id="alertCloseButton">&times;</button>
+        <div id="alertMessage"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="staff.js"></script>
+    <script>
+        // Save Google Form link to localStorage
+        document.getElementById('uploadFormLinkButton').addEventListener('click', function() {
+            const googleFormLink = document.getElementById('googleFormLink').value;
+            if (googleFormLink) {
+                localStorage.setItem('googleFormLink', googleFormLink);
+                showAlert('Google Form link uploaded successfully!', 'success');
+            } else {
+                showAlert('Please enter a valid Google Form link.', 'error');
+            }
+        });
+
+        // Show alert modal
+        function showAlert(message, type) {
+            const alertModal = document.getElementById('alertModal');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            alertMessage.innerText = message;
+            if (type === 'success') {
+                alertModal.classList.add('alert-success');
+            } else {
+                alertModal.classList.add('alert-error');
+            }
+            alertModal.style.display = 'block';
+        }
+
+        // Close the alert modal
+        document.getElementById('alertCloseButton').addEventListener('click', function() {
+            document.getElementById('alertModal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
